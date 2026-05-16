@@ -1,0 +1,6 @@
+Gene
+AKT1
+TNF
+IL6,score
+VEGFA,0.9,extra
+MAPK1;JUN
