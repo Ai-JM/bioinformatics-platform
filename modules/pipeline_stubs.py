@@ -119,7 +119,7 @@ def run_network_pharmacology_pipeline(
         for figure_path in export_venn_figures(
             component_sets,
             job_dir / "outputs" / "component_targets_venn",
-            "单成分靶点 Venn 图",
+            "Component Targets Venn Diagram",
         ):
             artifacts.append(artifact_for_path("单成分靶点 Venn", figure_path))
         summary["groups"]["component_targets"] = summarize_sets(component_sets)
@@ -142,7 +142,7 @@ def run_network_pharmacology_pipeline(
         for figure_path in export_venn_figures(
             disease_sets,
             job_dir / "outputs" / "disease_targets_venn",
-            "疾病靶点 Venn 图",
+            "Disease Targets Venn Diagram",
         ):
             artifacts.append(artifact_for_path("疾病靶点 Venn", figure_path))
         summary["groups"]["disease_targets"] = summarize_sets(disease_sets)

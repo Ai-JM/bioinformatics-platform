@@ -12,13 +12,10 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 import pandas as pd
 
-plt.rcParams["font.sans-serif"] = [
-    "Microsoft YaHei",
-    "SimHei",
-    "Arial Unicode MS",
-    "DejaVu Sans",
-]
-plt.rcParams["axes.unicode_minus"] = False
+from modules.plot_style import configure_matplotlib_fonts
+
+
+configure_matplotlib_fonts()
 
 
 TARGET_COLUMN_CANDIDATES = [
@@ -359,7 +356,7 @@ def draw_set_overview(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
     ax.text(
         0.5,
         0.92,
-        "当前上传集合数不是 2 或 3，已输出 Excel 交并集表；下方显示各集合靶点数量。",
+        "Set count is outside the standard 2-3 Venn layout; Excel intersection tables were exported.",
         ha="center",
         va="center",
         transform=ax.transAxes,

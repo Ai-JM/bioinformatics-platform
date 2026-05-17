@@ -22,6 +22,7 @@ from modules.md_parser import (
     parse_mmpbsa_dat,
     parse_xvg,
 )
+from modules.plot_style import configure_matplotlib_fonts
 from modules.ui_components import render_download_panel
 
 
@@ -338,7 +339,7 @@ def save_combined_figure(
 
 
 def apply_sci_style(ax: plt.Axes, font_size: int) -> None:
-    plt.rcParams.update({"font.size": font_size, "font.family": "Arial"})
+    configure_matplotlib_fonts(font_size)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.grid(True, color="#e5e7eb", linewidth=0.6, alpha=0.8)
