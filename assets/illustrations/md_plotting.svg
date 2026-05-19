@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-label="MD plotting illustration">
+  <rect width="720" height="360" rx="24" fill="#f8fafc"/>
+  <g transform="translate(72 70)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M50 120 C100 50, 160 194, 224 110 S342 54, 414 132 S506 190, 586 90" stroke="#2563eb" stroke-width="7"/>
+    <path d="M50 188 C110 150, 152 206, 228 176 S360 136, 422 190 S536 240, 586 164" stroke="#ef4444" stroke-width="6" opacity=".8"/>
+    <path d="M50 240 H610" stroke="#0f172a" stroke-width="3"/>
+    <path d="M50 248 V38" stroke="#0f172a" stroke-width="3"/>
+  </g>
+  <g fill="#0f172a" font-family="Arial, sans-serif" font-weight="700">
+    <text x="170" y="310" font-size="24">RMSD / RMSF</text>
+    <text x="430" y="310" font-size="24">MMPBSA Energy</text>
+  </g>
+  <circle cx="596" cy="82" r="18" fill="#bbf7d0" stroke="#16a34a" stroke-width="4"/>
+  <circle cx="632" cy="104" r="14" fill="#bfdbfe" stroke="#2563eb" stroke-width="4"/>
+  <line x1="610" y1="92" x2="622" y2="98" stroke="#64748b" stroke-width="4"/>
+</svg>

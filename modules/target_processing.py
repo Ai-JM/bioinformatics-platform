@@ -9,7 +9,7 @@ from pathlib import Path
 import re
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
+from matplotlib.patches import Circle, Rectangle
 import pandas as pd
 
 from modules.plot_style import configure_matplotlib_fonts
@@ -234,17 +234,36 @@ def safe_sheet_name(name: str) -> str:
     return cleaned[:31] or "targets"
 
 
-def export_venn_figures(target_sets: list[TargetSet], output_prefix: Path, title: str) -> list[Path]:
+def export_venn_figures(
+    target_sets: list[TargetSet],
+    output_prefix: Path,
+    title: str,
+    style: str = "auto",
+) -> list[Path]:
     output_prefix.parent.mkdir(parents=True, exist_ok=True)
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=(7.8, 5.6))
     ax.set_axis_off()
+    ax.set_aspect("equal", adjustable="box")
     ax.set_title(title, fontsize=16, fontweight="bold", pad=18)
 
-    if len(target_sets) == 2:
+    selected_style = resolve_venn_style(style, len(target_sets))
+    if selected_style == "bar":
+        draw_venn_bar(ax, target_sets)
+    elif selected_style == "vertical":
+        draw_vertical_venn(ax, target_sets)
+    elif selected_style == "proportional":
+        draw_proportional_venn(ax, target_sets)
+    elif selected_style == "overlap":
+        draw_overlap_venn(ax, target_sets)
+    elif selected_style == "network":
+        draw_network_venn(ax, target_sets)
+    elif selected_style == "flower":
+        draw_flower_venn(ax, target_sets)
+    elif len(target_sets) == 2:
         draw_two_set_venn(ax, target_sets)
     elif len(target_sets) == 3:
         draw_three_set_venn(ax, target_sets)
-    elif 4 <= len(target_sets) <= 6:
+    elif 4 <= len(target_sets) <= 7:
         draw_flower_venn(ax, target_sets)
     else:
         draw_set_overview(ax, target_sets)
@@ -256,6 +275,15 @@ def export_venn_figures(target_sets: list[TargetSet], output_prefix: Path, title
         paths.append(path)
     plt.close(fig)
     return paths
+
+
+def resolve_venn_style(style: str, set_count: int) -> str:
+    style = (style or "auto").lower()
+    if style == "auto":
+        return "flower" if set_count >= 4 else "classic"
+    if style == "classic" and set_count >= 4:
+        return "flower"
+    return style
 
 
 def draw_two_set_venn(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
@@ -310,7 +338,7 @@ def draw_flower_venn(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
     n_sets = len(target_sets)
     ax.set_xlim(-4.5, 4.5)
     ax.set_ylim(-4.2, 4.2)
-    colors = ["#60a5fa", "#34d399", "#fbbf24", "#f472b6", "#a78bfa", "#fb7185"]
+    colors = ["#60a5fa", "#34d399", "#fbbf24", "#f472b6", "#a78bfa", "#fb7185", "#14b8a6"]
 
     for index, item in enumerate(target_sets):
         angle = 2 * math.pi * index / n_sets
@@ -350,6 +378,124 @@ def draw_flower_venn(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
         va="center",
         fontsize=9,
     )
+
+
+def draw_overlap_venn(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
+    import math
+
+    if not target_sets:
+        return
+    n_sets = len(target_sets)
+    ax.set_xlim(-4.8, 4.8)
+    ax.set_ylim(-4.1, 4.1)
+    colors = ["#ef4444", "#2563eb", "#22c55e", "#f59e0b", "#a855f7", "#14b8a6", "#64748b"]
+    all_intersection = set.intersection(*(item.targets for item in target_sets))
+    union_targets = set.union(*(item.targets for item in target_sets))
+    layout_radius = 1.45 if n_sets <= 5 else 1.65
+    circle_radius = 1.95 if n_sets <= 5 else 1.82
+
+    for index, item in enumerate(target_sets):
+        angle = 2 * math.pi * index / max(n_sets, 1)
+        x = layout_radius * math.cos(angle)
+        y = layout_radius * math.sin(angle)
+        ax.add_patch(
+            Circle((x, y), circle_radius, color=colors[index % len(colors)], alpha=0.32)
+        )
+        ax.text(3.65 * math.cos(angle), 3.15 * math.sin(angle), item.name, ha="center", va="center", fontsize=9)
+        ax.text(
+            2.25 * math.cos(angle),
+            1.95 * math.sin(angle),
+            str(len(item.targets - all_intersection)),
+            ha="center",
+            va="center",
+            fontsize=10,
+        )
+
+    ax.text(0, 0, str(len(all_intersection)), ha="center", va="center", fontsize=18, fontweight="bold")
+    ax.text(0, -3.25, f"Union = {len(union_targets)}", ha="center", fontsize=10)
+
+
+def draw_proportional_venn(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
+    import math
+
+    if len(target_sets) < 2:
+        draw_set_overview(ax, target_sets)
+        return
+    selected = target_sets[:3]
+    max_size = max(len(item.targets) for item in selected) or 1
+    colors = ["#fca5a5", "#93c5fd", "#5eead4"]
+    centers = [(-1.4, 0.45), (1.4, 0.45), (0, -0.95)]
+    ax.set_xlim(-4.2, 4.2)
+    ax.set_ylim(-3.2, 3.4)
+    for index, item in enumerate(selected):
+        radius = 0.75 + 1.25 * math.sqrt(len(item.targets) / max_size)
+        ax.add_patch(Circle(centers[index], radius, color=colors[index], alpha=0.46))
+        ax.text(centers[index][0], centers[index][1] + radius + 0.28, item.name, ha="center", fontsize=10)
+        ax.text(centers[index][0], centers[index][1], str(len(item.targets)), ha="center", va="center", fontsize=12)
+    intersection = set.intersection(*(item.targets for item in selected))
+    ax.text(0, 0.1, str(len(intersection)), ha="center", va="center", fontsize=17, fontweight="bold")
+
+
+def draw_venn_bar(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
+    if len(target_sets) < 2:
+        draw_set_overview(ax, target_sets)
+        return
+    left, right = target_sets[:2]
+    both = left.targets & right.targets
+    left_only = left.targets - right.targets
+    right_only = right.targets - left.targets
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 8)
+    ax.add_patch(Circle((4, 5.1), 1.35, color="#c4b5fd", alpha=0.62))
+    ax.add_patch(Circle((5.5, 5.1), 1.35, color="#fecaca", alpha=0.62))
+    ax.text(3.45, 5.1, str(len(left_only)), ha="center", va="center", fontsize=12)
+    ax.text(4.75, 5.1, str(len(both)), ha="center", va="center", fontsize=12, fontweight="bold")
+    ax.text(6.05, 5.1, str(len(right_only)), ha="center", va="center", fontsize=12)
+    total = max(len(left.targets | right.targets), 1)
+    left_width = 4.2 * len(left.targets) / total
+    right_width = 4.2 * len(right.targets) / total
+    ax.add_patch(Rectangle((2.9, 2.1), left_width, 0.25, color="#c4b5fd", alpha=0.72))
+    ax.add_patch(Rectangle((2.9 + left_width, 1.68), right_width, 0.25, color="#fecaca", alpha=0.72))
+    ax.text(2.8, 1.2, left.name, ha="right", fontsize=9)
+    ax.text(7.5, 1.2, right.name, ha="left", fontsize=9)
+
+
+def draw_vertical_venn(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
+    selected = target_sets[: min(7, len(target_sets))]
+    colors = ["#a3e635", "#60a5fa", "#f472b6", "#facc15", "#34d399", "#a78bfa", "#fb7185"]
+    ax.set_xlim(-4.2, 4.2)
+    ax.set_ylim(-4.0, 4.0)
+    for index, item in enumerate(selected):
+        y = 2.1 - index * 0.7
+        x = -0.35 if index % 2 == 0 else 0.35
+        ax.add_patch(Circle((x, y), 1.45, color=colors[index], alpha=0.42))
+        ax.text(-3.8, y, item.name, va="center", fontsize=9)
+        ax.text(0, y, str(len(item.targets)), ha="center", va="center", fontsize=12, fontweight="bold")
+    if selected:
+        intersection = set.intersection(*(item.targets for item in selected))
+        ax.text(0, -3.45, f"Intersection = {len(intersection)}", ha="center", fontsize=10)
+
+
+def draw_network_venn(ax: plt.Axes, target_sets: list[TargetSet]) -> None:
+    import math
+
+    if not target_sets:
+        return
+    n_sets = len(target_sets)
+    ax.set_xlim(-4.4, 4.4)
+    ax.set_ylim(-3.5, 3.5)
+    all_intersection = set.intersection(*(item.targets for item in target_sets))
+    ax.add_patch(Circle((0, 0), 0.48, color="#ef4444", alpha=0.88))
+    ax.text(0, 0, str(len(all_intersection)), ha="center", va="center", fontsize=11, color="white", fontweight="bold")
+    colors = ["#60a5fa", "#34d399", "#f59e0b", "#a78bfa", "#fb7185", "#14b8a6"]
+    for index, item in enumerate(target_sets):
+        angle = 2 * math.pi * index / n_sets
+        x = 2.75 * math.cos(angle)
+        y = 2.15 * math.sin(angle)
+        ax.plot([0, x], [0, y], color="#94a3b8", linewidth=1.4)
+        ax.add_patch(Circle((x, y), 0.55, color=colors[index % len(colors)], alpha=0.88))
+        ax.text(x, y, str(len(item.targets)), ha="center", va="center", fontsize=10, color="white", fontweight="bold")
+        ax.text(3.65 * math.cos(angle), 2.85 * math.sin(angle), item.name, ha="center", va="center", fontsize=9)
 
 
 def draw_set_overview(ax: plt.Axes, target_sets: list[TargetSet]) -> None:

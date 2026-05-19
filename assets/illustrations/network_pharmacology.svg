@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-label="Network pharmacology illustration">
+  <rect width="720" height="360" rx="24" fill="#f8fafc"/>
+  <circle cx="198" cy="182" r="72" fill="#dbeafe" stroke="#60a5fa" stroke-width="4"/>
+  <circle cx="362" cy="132" r="64" fill="#dcfce7" stroke="#34d399" stroke-width="4"/>
+  <circle cx="510" cy="220" r="76" fill="#fef3c7" stroke="#f59e0b" stroke-width="4"/>
+  <g stroke="#64748b" stroke-width="3" opacity=".7">
+    <line x1="257" y1="158" x2="304" y2="140"/>
+    <line x1="418" y1="160" x2="455" y2="190"/>
+    <line x1="270" y1="205" x2="436" y2="225"/>
+  </g>
+  <g fill="#0f172a" font-family="Arial, sans-serif" font-weight="700">
+    <text x="198" y="188" font-size="26" text-anchor="middle">Drug</text>
+    <text x="362" y="139" font-size="26" text-anchor="middle">Targets</text>
+    <text x="510" y="227" font-size="26" text-anchor="middle">Disease</text>
+  </g>
+  <g fill="#2563eb">
+    <circle cx="104" cy="86" r="9"/><circle cx="126" cy="104" r="6"/><circle cx="90" cy="116" r="6"/>
+    <circle cx="606" cy="90" r="8"/><circle cx="632" cy="118" r="6"/><circle cx="584" cy="126" r="6"/>
+  </g>
+</svg>

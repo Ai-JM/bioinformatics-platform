@@ -24,7 +24,7 @@ def run_placeholder_pipeline(
     page: PageDefinition,
     parameters: dict[str, str],
     uploaded_files: list[Any],
-) -> dict[str, str]:
+) -> dict[str, Any]:
     job_id = create_job_id(page.key)
     job_dir = create_job_dir(job_id)
     input_files = save_uploaded_files(uploaded_files, job_dir)
@@ -38,14 +38,14 @@ def run_placeholder_pipeline(
         input_files=input_files,
     )
 
-    placeholder_result = {
+    result = {
         "job_id": job_id,
         "module": page.label,
-        "message": "框架已完成任务初始化。后续可在此处接入 Python、R 脚本或 Docker 容器执行真实分析。",
+        "message": "任务初始化已完成。后续可在此处接入 Python、R 脚本或 Docker 容器执行真实分析。",
         "expected_outputs": expected_outputs_for(page.key),
     }
     result_path = job_dir / "outputs" / "placeholder_result.json"
-    save_json(placeholder_result, result_path)
+    save_json(result, result_path)
 
     log_path = job_dir / "logs" / "run.log"
     log_path.write_text(
@@ -95,6 +95,9 @@ def run_network_pharmacology_pipeline(
         parameters=parameters,
         input_files=input_files,
     )
+
+    if not component_paths and not disease_paths:
+        raise ValueError("请至少上传一组单成分靶点或疾病靶点文件。")
 
     artifacts: list[dict[str, str]] = [
         {"label": "任务参数 JSON", "path": str(manifest_path), "mime": "application/json"}
@@ -147,9 +150,6 @@ def run_network_pharmacology_pipeline(
             artifacts.append(artifact_for_path("疾病靶点 Venn", figure_path))
         summary["groups"]["disease_targets"] = summarize_sets(disease_sets)
 
-    if not component_paths and not disease_paths:
-        raise ValueError("请至少上传一组单成分靶点或疾病靶点文件。")
-
     result_path = job_dir / "outputs" / "network_pharmacology_summary.json"
     save_json(summary, result_path)
     artifacts.append({"label": "结果摘要 JSON", "path": str(result_path), "mime": "application/json"})
@@ -196,7 +196,7 @@ def run_venn_pipeline(
         input_files=input_files,
     )
     if not input_files:
-        raise ValueError("请至少上传 2 个靶点列表文件。")
+        raise ValueError("请至少上传 2 个靶点集合文件。")
 
     target_sets = load_target_sets(
         input_files,
@@ -209,6 +209,7 @@ def run_venn_pipeline(
         target_sets,
         job_dir / "outputs" / "venn_targets",
         parameters.get("plot_title", "Venn targets"),
+        style=parameters.get("venn_style", "auto"),
     )
     result_path = job_dir / "outputs" / "venn_summary.json"
     save_json({"job_id": job_id, "sets": summarize_sets(target_sets)}, result_path)
@@ -270,8 +271,8 @@ def run_venn_builder_pipeline(
 
     if len(target_sets) < 2:
         raise ValueError("请至少提供 2 组非空集合。")
-    if len(target_sets) > 6:
-        raise ValueError("当前 Venn 图模块最多支持 6 组集合。")
+    if len(target_sets) > 7:
+        raise ValueError("当前 Venn 图模块最多支持 7 组集合。")
 
     text_source_path = job_dir / "inputs" / "manual_sets.txt"
     text_source_path.write_text(format_manual_sets(text_sets), encoding="utf-8")
@@ -282,11 +283,13 @@ def run_venn_builder_pipeline(
         target_sets,
         job_dir / "outputs" / "nature_style_venn",
         parameters.get("plot_title", "Venn analysis"),
+        style=parameters.get("venn_style", "auto"),
     )
 
     summary = {
         "job_id": job_id,
         "plot_style": "Nature-style clean Venn/flower Venn",
+        "venn_style": parameters.get("venn_style", "auto"),
         "set_count": len(target_sets),
         "sets": summarize_sets(target_sets),
         "outputs": [str(path) for path in [excel_path, *figure_paths]],
@@ -317,7 +320,7 @@ def run_venn_builder_pipeline(
         {"label": "结果摘要 JSON", "path": str(result_path), "mime": "application/json"},
         {"label": "手动输入 TXT", "path": str(text_source_path), "mime": "text/plain"},
     ]
-    artifacts.extend(artifact_for_path("Nature Venn", path) for path in figure_paths)
+    artifacts.extend(artifact_for_path("Venn 图", path) for path in figure_paths)
 
     return {
         "job_id": job_id,
@@ -341,11 +344,11 @@ def expected_outputs_for(module_key: str) -> list[str]:
             "disease_targets_venn.pdf",
             "disease_targets_venn.svg",
         ],
-        "geo_deg": ["deg_results.csv", "volcano_plot.pdf", "heatmap.pdf"],
+        "geo_deg": ["DEG_all.csv", "volcano.png", "heatmap_top20.png"],
         "core_targets": ["intersection_targets.csv", "target_source_matrix.csv"],
         "enrichment": ["go_results.csv", "kegg_results.csv", "enrichment_plots.pdf"],
-        "venn_analysis": ["venn_targets.xlsx", "venn_targets.png", "venn_targets.pdf", "venn_targets.svg"],
-        "md_plotting": ["md_summary.csv", "md_plot.pdf"],
+        "venn_analysis": ["venn_union_intersections.xlsx", "nature_style_venn.png", "nature_style_venn.pdf"],
+        "md_plotting": ["md_summary.csv", "md_figures.zip"],
     }
     return outputs_by_module.get(module_key, [])
 

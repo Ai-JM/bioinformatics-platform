@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-label="Venn style gallery">
+  <rect width="1200" height="520" rx="20" fill="#ffffff"/>
+  <style>
+    .title{font:700 24px Arial,sans-serif;fill:#0369a1}
+    .sub{font:16px Arial,sans-serif;fill:#334155}
+    .mini{font:700 16px Arial,sans-serif;fill:#0f172a}
+  </style>
+  <g transform="translate(20 24)">
+    <g>
+      <circle cx="70" cy="72" r="48" fill="#93c5fd" opacity=".6"/>
+      <circle cx="126" cy="72" r="48" fill="#86efac" opacity=".6"/>
+      <circle cx="98" cy="114" r="48" fill="#fde68a" opacity=".6"/>
+      <text x="98" y="180" text-anchor="middle" class="title">标准文氏图</text>
+      <text x="98" y="208" text-anchor="middle" class="sub">2-3 组集合</text>
+    </g>
+    <g transform="translate(250 0)">
+      <circle cx="54" cy="88" r="58" fill="#fca5a5" opacity=".56"/>
+      <circle cx="112" cy="64" r="58" fill="#93c5fd" opacity=".56"/>
+      <circle cx="122" cy="124" r="58" fill="#86efac" opacity=".50"/>
+      <circle cx="80" cy="132" r="58" fill="#f9a8d4" opacity=".48"/>
+      <text x="86" y="180" text-anchor="middle" class="title">多圆重叠文氏图</text>
+      <text x="86" y="208" text-anchor="middle" class="sub">4-7 组重叠展示</text>
+    </g>
+    <g transform="translate(500 0)">
+      <circle cx="54" cy="96" r="54" fill="#93c5fd" opacity=".55"/>
+      <circle cx="126" cy="96" r="54" fill="#86efac" opacity=".55"/>
+      <circle cx="90" cy="96" r="30" fill="#ffffff" stroke="#0f172a" stroke-width="2" opacity=".75"/>
+      <text x="90" y="180" text-anchor="middle" class="title">比例面积文氏图</text>
+      <text x="90" y="208" text-anchor="middle" class="sub">圆面积体现集合大小</text>
+    </g>
+    <g transform="translate(760 0)">
+      <g fill="#fde68a" opacity=".75">
+        <circle cx="90" cy="36" r="36"/>
+        <circle cx="144" cy="74" r="36"/>
+        <circle cx="124" cy="136" r="36"/>
+        <circle cx="56" cy="136" r="36"/>
+        <circle cx="36" cy="74" r="36"/>
+      </g>
+      <circle cx="90" cy="92" r="28" fill="#ef4444" opacity=".75"/>
+      <text x="90" y="180" text-anchor="middle" class="title">花瓣圆形文氏图</text>
+      <text x="90" y="208" text-anchor="middle" class="sub">4-7 组集合推荐</text>
+    </g>
+    <g transform="translate(990 0)">
+      <g stroke="#64748b" stroke-width="3">
+        <line x1="50" y1="90" x2="90" y2="48"/>
+        <line x1="130" y1="90" x2="90" y2="48"/>
+        <line x1="50" y1="90" x2="90" y2="132"/>
+        <line x1="130" y1="90" x2="90" y2="132"/>
+      </g>
+      <circle cx="50" cy="90" r="20" fill="#60a5fa"/>
+      <circle cx="130" cy="90" r="20" fill="#34d399"/>
+      <circle cx="90" cy="48" r="16" fill="#f59e0b"/>
+      <circle cx="90" cy="132" r="16" fill="#f472b6"/>
+      <text x="90" y="180" text-anchor="middle" class="title">网络 Venn 图</text>
+      <text x="90" y="208" text-anchor="middle" class="sub">节点和连线关系</text>
+    </g>
+  </g>
+  <g transform="translate(112 300)">
+    <g>
+      <circle cx="50" cy="74" r="54" fill="#c4b5fd" opacity=".65"/>
+      <circle cx="116" cy="74" r="54" fill="#fecaca" opacity=".65"/>
+      <rect x="38" y="142" width="92" height="14" rx="2" fill="#c084fc" opacity=".45"/>
+      <rect x="78" y="162" width="72" height="14" rx="2" fill="#f0abfc" opacity=".45"/>
+      <text x="84" y="202" text-anchor="middle" class="title">文氏图 + 条形图</text>
+      <text x="84" y="230" text-anchor="middle" class="sub">2 组集合占比</text>
+    </g>
+    <g transform="translate(300 0)">
+      <circle cx="90" cy="78" r="54" fill="#a3e635" opacity=".62"/>
+      <circle cx="90" cy="118" r="54" fill="#60a5fa" opacity=".58"/>
+      <circle cx="90" cy="158" r="54" fill="#f472b6" opacity=".56"/>
+      <text x="90" y="222" text-anchor="middle" class="title">垂直圆形文氏图</text>
+      <text x="90" y="250" text-anchor="middle" class="sub">多圆纵向叠放</text>
+    </g>
+    <g transform="translate(600 0)">
+      <circle cx="58" cy="88" r="58" fill="#fca5a5" opacity=".56"/>
+      <circle cx="126" cy="88" r="58" fill="#93c5fd" opacity=".56"/>
+      <circle cx="94" cy="142" r="58" fill="#86efac" opacity=".50"/>
+      <text x="96" y="222" text-anchor="middle" class="title">欧拉式圆形图</text>
+      <text x="96" y="250" text-anchor="middle" class="sub">圆形近似关系</text>
+    </g>
+  </g>
+</svg>

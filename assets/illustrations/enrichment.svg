@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-label="GO KEGG enrichment illustration">
+  <rect width="720" height="360" rx="24" fill="#f8fafc"/>
+  <g transform="translate(92 62)">
+    <rect width="250" height="236" rx="18" fill="#ecfeff" stroke="#22d3ee" stroke-width="4"/>
+    <circle cx="68" cy="72" r="30" fill="#67e8f9"/>
+    <circle cx="150" cy="112" r="44" fill="#a7f3d0"/>
+    <circle cx="86" cy="174" r="34" fill="#fde68a"/>
+    <line x1="93" y1="82" x2="118" y2="96" stroke="#64748b" stroke-width="4"/>
+    <line x1="126" y1="142" x2="102" y2="158" stroke="#64748b" stroke-width="4"/>
+  </g>
+  <g transform="translate(414 78)">
+    <rect x="0" y="0" width="42" height="190" rx="8" fill="#93c5fd"/>
+    <rect x="62" y="48" width="42" height="142" rx="8" fill="#86efac"/>
+    <rect x="124" y="28" width="42" height="162" rx="8" fill="#facc15"/>
+    <rect x="186" y="94" width="42" height="96" rx="8" fill="#fda4af"/>
+    <path d="M0 202 H250" stroke="#0f172a" stroke-width="3"/>
+  </g>
+  <text x="218" y="326" text-anchor="middle" font-size="24" font-family="Arial, sans-serif" font-weight="700" fill="#0f172a">Pathway Network</text>
+  <text x="538" y="326" text-anchor="middle" font-size="24" font-family="Arial, sans-serif" font-weight="700" fill="#0f172a">Enrichment Barplot</text>
+</svg>
